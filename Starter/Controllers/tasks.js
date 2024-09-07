@@ -1,7 +1,7 @@
 const taskimported = require('../Model/Tasks')
 const getalltasks = async (req, res) => {
     try {
-        const tasks = await taskimported.find({}, { name: /postman/i })
+        const tasks = await taskimported.find({}, { name: /hrithik/i })
         res.status(200).json({ tasks })
     } catch (error) {
         res.status(500).json({ msg: error })
@@ -22,7 +22,7 @@ const GetSingletask = async (req, res) => {
         const { id: taskID } = req.params
         const task = await taskimported.findOne({ _id: taskID })
         if (task) {
-            res.status(200).json({task});
+            res.status(200).json({ task });
         } else {
             res.status(404).json({ message: 'Task not found' });
         }
@@ -37,11 +37,21 @@ const Updatetask = (req, res) => {
     res.send(`Update TASK from POST`)
 }
 
-const Deletetask = (req, res) => {
-    res.send(`Delete TASK from POST`)
+const Deletetask = async (req, res) => {
+    try {
+        const { id: taskID } = req.params
+        const task = await taskimported.findByIdAndDelete({ _id: taskID })
+        if (task) {
+            res.status(200).json({ msg: "Deleted the task your requested for" });
+        } else {
+            res.status(404).json({ message: 'Task not found' });
+        }
+        // res.status(200).json({ task })
+    } catch (error) {
+        res.status(500).json({ msg: error })
+
+    }
 }
-
-
 module.exports = {
     getalltasks,
     Createtask, GetSingletask, Updatetask, Deletetask
