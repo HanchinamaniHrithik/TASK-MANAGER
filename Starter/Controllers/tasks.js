@@ -1,7 +1,7 @@
 const taskimported = require('../Model/Tasks')
 const getalltasks = async (req, res) => {
     try {
-        const tasks = await taskimported.find({}, { name: /hrithik/i })
+        const tasks = await taskimported.find({})
         res.status(200).json({ tasks })
     } catch (error) {
         res.status(500).json({ msg: error })
@@ -33,9 +33,6 @@ const GetSingletask = async (req, res) => {
     }
 }
 
-const Updatetask = (req, res) => {
-    res.send(`Update TASK from POST`)
-}
 
 const Deletetask = async (req, res) => {
     try {
@@ -52,7 +49,51 @@ const Deletetask = async (req, res) => {
 
     }
 }
+const Updatetask = async (req, res) => {
+    try {
+        const { id: taskID } = req.params;
+        const task = await taskimported.findByIdAndUpdate(
+            { _id: taskID },
+            req.body,
+            {
+                new: true, // Ensures the updated task is returned
+                runValidators: true
+            }
+        );
+        if (!task) {
+            return res.status(404).json({ message: "Task not found" });
+        }
+        // Return the updated task
+        res.status(200).json({ task });
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
+
+
+const Edittask = async (req, res) => {
+    try {
+        const { id: taskID } = req.params;
+        const task = await taskimported.findByIdAndUpdate(
+            { _id: taskID },
+            req.body,
+            {
+                new: true, // Ensures the updated task is returned
+                runValidators: true,
+                overwrite: true // Completely replaces the task if PUT is used
+            }
+        );
+        if (!task) {
+            return res.status(404).json({ message: "Task not found" });
+        }
+        // Return the updated task
+        res.status(200).json({ task });
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
+
 module.exports = {
     getalltasks,
-    Createtask, GetSingletask, Updatetask, Deletetask
+    Createtask, GetSingletask, Updatetask, Deletetask, Edittask
 }

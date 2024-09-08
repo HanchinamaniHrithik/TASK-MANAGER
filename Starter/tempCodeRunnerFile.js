@@ -14,17 +14,17 @@ const connectedDB = require('./Db/Connect')
 app.use(express.json())
 
 //routes
-app.get('/hello', (req,res)=>{
+app.get('/hello', (req, res) => {
     res.send(`Task Manager app`)
 })
 
 app.use('/api/v1/tasks', Tasks)
-const port =3000;
+const port = 3000;
 
-const start = async()=>{
+const start = async () => {
     try {
         await connectedDB(process.env.MONGO_URI)
-        app.listen(port,console.log(`Server Listening on port ${port}... `) )
+        app.listen(port, console.log(`Server Listening on port ${port}... `))
     } catch (error) {
         console.log(error)
     }
