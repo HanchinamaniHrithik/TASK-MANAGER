@@ -3,23 +3,23 @@ const express = require('express');
 const app = express();
 
 const Tasks = require('./Routes/Tasks')
-
-
+const notFound = require('./MiddleWare/notFound')
+const errHandler = require('./MiddleWare/Error-handler')
 const connectedDB = require('./Db/Connect')
 
 
 
-//middle
-
+//middleWare
+app.use(express.static('./Public'))
 app.use(express.json())
 
 //routes
-app.get('/hello', (req, res) => {
-    res.send(`Task Manager app`)
-})
-
+app.use(notFound)
+app.use(errHandler)
 app.use('/api/v1/tasks', Tasks)
+
 const port = 3000;
+
 
 const start = async () => {
     try {
